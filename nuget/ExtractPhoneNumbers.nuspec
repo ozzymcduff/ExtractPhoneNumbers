@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ExtractPhoneNumbers</id>
+    <title>ExtractPhoneNumbers</title>
+    <version>0.0.1</version>
+    <authors>Oskar Gewalli</authors>
+    <owners>Oskar Gewalli</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/wallymathieu/ExtractPhoneNumbers</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ExtractPhoneNumbers extracts phone numbers from text. It can be used to split a text based on phone numbers. A scenario would be if you are putting phone numbers in a database or search engine and want to have a single format.</description>
+    <summary>ExtractPhoneNumbers extracts phone numbers from text.</summary>
+    <copyright>Copyright 2013</copyright>
+    <references>
+      <reference file="ExtractPhoneNumbers.dll" />
+    </references>
+    <!--<dependencies>
+    </dependencies>-->
+    <!--<releaseNotes></releaseNotes>-->
+  </metadata>
+</package>
