@@ -49,6 +49,7 @@
     <Compile Include="ExtractPhoneNumberFromTextTest.cs" />
     <Compile Include="MatchTokenExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestCase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

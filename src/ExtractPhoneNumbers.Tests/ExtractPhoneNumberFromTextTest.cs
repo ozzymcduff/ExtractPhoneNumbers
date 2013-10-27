@@ -122,36 +122,4 @@ namespace ExtractPhoneNumbers.Tests
             Assert.That(MatchToken.Tokens(format).ToArray().JoinToString(), Is.EqualTo(format));
         }
     }
-
-    public class TestCase
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
-
-        public TestCase(string key, string value)
-        {
-            Key = key;
-            Value = value;
-        }
-
-        public TestCase(string[] line)
-        {
-            Key = line[0];
-            Value = line[1];
-        }
-
-        public bool Fail()
-        {
-            return Value.Equals("FAIL");
-        }
-
-        public bool Match()
-        {
-            return Value.Equals("MATCH");
-        }
-        public bool MatchWithoutExt()
-        {
-            return Value.Equals("MATCH") && Key.IndexOf("ext", StringComparison.InvariantCultureIgnoreCase)<0;
-        }
-    }
 }
