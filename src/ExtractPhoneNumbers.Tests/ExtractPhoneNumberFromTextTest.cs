@@ -6,10 +6,11 @@ using NUnit.Framework;
 namespace ExtractPhoneNumbers.Tests
 {
     [TestFixture]
-    public class ExtractPhoneNumberFromTextTest 
+    public class ExtractPhoneNumberFromTextTest
     {
         private const string LoremIpsum = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec urna urna, mollis cursus posuere et, rhoncus et leo. Vestibulum mollis pellentesque aliquam. Curabitur lacinia enim eu egestas dictum. Quisque mollis vehicula risus, tincidunt convallis justo tincidunt eget. Donec ullamcorper aliquet nisl, eu aliquet eros aliquam nec. Donec id accumsan mauris. Suspendisse potenti. Vestibulum iaculis id sem eu egestas. Quisque sollicitudin in massa sit amet suscipit. Nam mattis tristique felis, eget sodales lacus rhoncus tincidunt. Sed quis leo blandit, blandit tellus ut, rutrum nunc. Fusce ut bibendum est, at ultricies augue. Etiam ac convallis libero. Ut suscipit diam nec sodales auctor. Aliquam eu venenatis arcu, ut ullamcorper nunc. Nulla varius interdum mollis.";
-
+        // from http://stackoverflow.com/questions/5111029/php-regex-extract-like-phone-number-regex-from-html-documents
+        
         private IEnumerable<KeyValuePair<string, string>> testcases =
             @"0705-123456  :: MATCH
 +46705123456  :: MATCH
@@ -23,8 +24,8 @@ namespace ExtractPhoneNumbers.Tests
 520.555.5542 :: MATCH 
 5205555542 :: MATCH 
 520 555 5542 :: MATCH 
-520) 555-5542 :: FAIL 
-(520 555-5542 :: FAIL 
+520) 555-5542 :: MATCH 
+(520 555-5542 :: MATCH 
 (520)555-5542 :: MATCH 
 (520) 555-5542 :: MATCH 
 (520) 555 5542 :: MATCH 
@@ -32,15 +33,22 @@ namespace ExtractPhoneNumbers.Tests
 520 555-0555 :: MATCH 
 (520)5555542 :: MATCH 
 520.555-4523 :: MATCH 
-19991114444 :: FAIL 
+19991114444 :: MATCH 
 19995554444 :: MATCH 
 514 555 1231 :: MATCH 
 1 555 555 5555 :: MATCH 
 1.555.555.5555 :: MATCH 
 1-555-555-5555 :: MATCH 
-520) 555-5542 :: FAIL 
-(520 555-5542 :: FAIL 
-1(555)555-5555 :: MATCH".Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+1(555)555-5555 :: MATCH
+01119799611 :: MATCH
+00201119799611 :: MATCH
+0111 97 99 611 :: MATCH
+002-01119799611 :: MATCH
+(002)01119799611 :: MATCH
+0111.97.99.611 :: MATCH
+000-000-0000 :: MATCH
+000 - 000 - 0000 :: FAIL
+0000000000 :: MATCH".Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(
                             line => line.Split(new[] { "::" }, StringSplitOptions.None).Select(column => column.Trim()).ToArray()
                         ).Select(line => new KeyValuePair<string, string>(line[0], line[1]));
@@ -59,7 +67,17 @@ namespace ExtractPhoneNumbers.Tests
             var matches = MatchToken.Tokens(_input).ToArray();
             Assert.That(testcases
                             .Where(testcase => testcase.Value.Equals("MATCH"))
-                            .Where(testcase => !matches.Any(m => m.Value == testcase.Key))
+                            .Where(testcase => !matches.Any(m => m.Value == testcase.Key && m.Token == MatchToken.Type.Number))
+                            .Select(testcase => testcase.Key), Is.EquivalentTo(new string[0]));
+        }
+
+        [Test]
+        public void All_test_cases_supposed_to_fail()
+        {
+            var matches = MatchToken.Tokens(_input).ToArray();
+            Assert.That(testcases
+                            .Where(testcase => testcase.Value.Equals("FAIL"))
+                            .Where(testcase => matches.Any(m => m.Value == testcase.Key && m.Token == MatchToken.Type.Number))
                             .Select(testcase => testcase.Key), Is.EquivalentTo(new string[0]));
         }
 
