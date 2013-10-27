@@ -69,7 +69,7 @@ namespace ExtractPhoneNumbers.Tests
 (520)555-5542 # .4 :: FAIL 
 (512) 555-1234 # 123 :: MATCH 
 
-0000000000 :: MATCH 
+0000000000 :: MATCH :# This number matches, but we dont care that much about correctness here (you could use this lib together with GlobalPhone in order to be more strict)
 "
             .Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(
@@ -90,7 +90,8 @@ namespace ExtractPhoneNumbers.Tests
             var matches = MatchToken.Tokens(_input).ToArray();
             var failures = testcases
                 .Where(testcase => testcase.Match())
-                .Where(testcase => !matches.Any(m => m.Value == testcase.Key && m.Token == MatchToken.Type.Number)).ToArray();
+                .Where(testcase => !matches.Any(m => m.Value == testcase.Key && m.Token == MatchToken.Type.Number))
+                .ToArray();
             Assert.That(failures
                             .Select(testcase => testcase.Key), Is.EquivalentTo(new string[0]), failures.JoinToString());
         }
@@ -99,10 +100,12 @@ namespace ExtractPhoneNumbers.Tests
         public void All_test_cases_supposed_to_fail()
         {
             var matches = MatchToken.Tokens(_input).ToArray();
-            Assert.That(testcases
-                            .Where(testcase => testcase.Fail())
-                            .Where(testcase => matches.Any(m => m.Value == testcase.Key && m.Token == MatchToken.Type.Number))
-                            .Select(testcase => testcase.Key), Is.EquivalentTo(new string[0]));
+            var failures = testcases
+                .Where(testcase => testcase.Fail())
+                .Where(testcase => matches.Any(m => m.Value == testcase.Key && m.Token == MatchToken.Type.Number))
+                .ToArray();
+            Assert.That(failures
+                            .Select(testcase => testcase.Key), Is.EquivalentTo(new string[0]), failures.JoinToString());
         }
 
         [Test]
