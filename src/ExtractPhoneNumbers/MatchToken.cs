@@ -6,29 +6,6 @@ namespace ExtractPhoneNumbers
 {
     public class MatchToken
     {
-        private static readonly Regex PhoneNumberRegex = new Regex(@"
-\+? 
-(?:
-    \(?\d*\)? 
-    \s?
-    \(?\d+\)?
-    \d*
-)
-(?:
-    [\s\./-]?\d{2,}
-)+ #
-(?:
-    \s*
-    (?:
-        \#|x\.?|ext\.?|extension
-    )
-    \s*
-    (
-        \d+
-    )
-)?", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
-        
-        
         public MatchToken(Type token, string value)
         {
             Value = value;
@@ -53,7 +30,7 @@ namespace ExtractPhoneNumbers
 
         public static IEnumerable<MatchToken> Tokens(string input)
         {
-            var matches = PhoneNumberRegex.Matches(input).Cast<Match>();
+            var matches = PhoneNumbers.PhoneNumberRegex.Matches(input).Cast<Match>();
             int index = 0;
             foreach (var t in matches)
             {
@@ -69,5 +46,6 @@ namespace ExtractPhoneNumbers
                 yield return Text(input.Substring(index, input.Length - index));
             }
         }
+
     }
 }
