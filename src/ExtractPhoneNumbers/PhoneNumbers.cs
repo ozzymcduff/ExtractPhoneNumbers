@@ -26,7 +26,7 @@ namespace ExtractPhoneNumbers
     (
         \d+
     )
-)?", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
+)?", RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public static IEnumerable<string> Extract(string input)
         {
